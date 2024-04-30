@@ -86,5 +86,5 @@ int eval(std::string pref) {
       continue;
     }
   }
-  return stack_2.get;
+  return stack_2.get();
 }
