@@ -2,11 +2,10 @@
 #include <string>
 #include <map>
 #include "tstack.h"
-
-bool isOperator(char c) {
+bool isOper(char c) {
     return (c == '+' || c == '-' || c == '*' || c == '/');
 }
-int isPriority(char op) {
+int isPrior(char op) {
     if (op == '+' || op == '-') {
         return 1;
     } else if (op == '*' || op == '/') {
@@ -14,43 +13,37 @@ int isPriority(char op) {
     }
     return 0;
 }
-
 std::string infx2pstfx(std::string inf) {
-  std::stack<char, 100> stack;
+  stack<char, 100> stack;
   std::string postfix;
   int length = infix.length();
   for (int i = 0; i < length; ++i) {
     char c = infix[i];
-    if (std::isspace(c)) {
+    if (isspace(c)) {
       continue;
-    } else if (std::isdigit(c)) {
+    } else if (isdigit(c)) {
       postfix += c;
       postfix += ' ';
-    } else if (isOperator(c)) {
-      int priority_c = priority(c);
-      while (!stack.empty() && stack.top() != '(' && priority(stack.top()) >= priority_c) {
-        postfix += stack.top();
+    } else if (isOper(c)) {
+      int pri = isPrior(c);
+      while (!stack.empty() && stack.get() != '(' && isPrior(stack.get()) >= pri) {
+        postfix += stack.pop();
         postfix += ' ';
-        stack.pop();
       }
       stack.push(c);
     } else if (c == '(') {
       stack.push(c);
     } else if (c == ')') {
       while (!stack.empty() && stack.top() != '(') {
-        postfix += stack.top();
+        postfix += stack.pop();
         postfix += ' ';
-        stack.pop();
       }
-      if (!stack.empty()) {
         stack.pop();
-      }
     }
   }
   while (!stack.empty()) {
-    postfix += stack.top();
+    postfix += stack.pop();
     postfix += ' ';
-    stack.pop();
   }
   if (!postfix.empty()) {
     postfix.pop_back();
